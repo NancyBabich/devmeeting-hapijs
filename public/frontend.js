@@ -1,16 +1,18 @@
 'use strict';
 
-//5/ All products are stored in the array.
 const products = [
-  { id: 3, name: 'Laptop', price: 13545 },
-  { id: 1, name: 'iPad', price: 23000 },
-  { id: 9, name: 'TV', price: 70000 },
+  { id: 3, name: 'Laptop', price: 13545, description: 'Best price for a decent budget laptop.' },
+  { id: 1, name: 'iPad', price: 23000, description: 'Excellent quality and great price!' },
+  { id: 9, name: 'TV', price: 70000, description: 'Huge, bright display and amazing sound.' },
 ];
 
+//4/ Rendering is now extracted to a separate function.
 const $products = document.querySelector('.products');
+for (const product of products) {
+  $products.appendChild(renderProduct(product));
+}
 
-// We just iterated and create DOM elements from those objects.
-for (const {name, id, price} of products) {
+function renderProduct ({name, id, price, description}) {
   const $img = el('img.product__img');
   $img.width = 250;
   $img.height = 250;
@@ -23,6 +25,27 @@ for (const {name, id, price} of products) {
   const $price = el('p.product__price');
   $price.innerHTML = `Price: <strong>$${(price / 100).toFixed(2)}</strong>`;
 
+
+  //4/ Build-up description structure.
+  const $description = el('p.product__description');
+  const $descriptionText = el('span');
+  const $descriptionExpand = el('a');
+  [$descriptionText, $descriptionExpand].forEach(el => $description.appendChild(el));
+
+  //4/ Rendering description depending on state.
+  const renderDescription = full => {
+    $descriptionText.textContent = full ? `${description} ` : `${description.substr(0, 10)}... `;
+    $descriptionExpand.textContent = full ? 'Less' : 'Read more';
+  };
+  //5/ Toggle description when clicking the button.
+  let expanded = false;
+  $descriptionExpand.addEventListener('click', () => {
+    expanded = !expanded;
+    renderDescription(expanded);
+  });
+  // Don't forget the initial render.
+  renderDescription(expanded);
+
   const $button = el('button.product__button');
   $button.innerHTML = `
     <svg width="25" height="25">
@@ -32,12 +55,12 @@ for (const {name, id, price} of products) {
   `;
 
   const $product = el('.product');
-  [$img, $name, $price, $button].forEach($el => $product.appendChild($el))
+  [$img, $name, $price, $description, $button].forEach($el => $product.appendChild($el))
 
-  $products.appendChild($product);
+  return $product;
 }
 
-function el(creator) {
+function el (creator) {
   const classes = creator.split('.');
   const tag = classes.shift() || 'div';
 
