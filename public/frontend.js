@@ -1,27 +1,23 @@
 'use strict';
 
-const products = [
-  { id: 3, name: 'Laptop', price: 13545, description: 'Best price for a decent budget laptop.' },
-  { id: 1, name: 'iPad', price: 23000, description: 'Excellent quality and great price!' },
-  { id: 9, name: 'TV', price: 70000, description: 'Huge, bright display and amazing sound.' },
-];
-
-// Initial render
-render(products);
-
-//10/ Filter and re-render whenever search box content changes.
-document.querySelector('.products__search').addEventListener('input', ev => {
-  const { value } = ev.target;
-  if (!value) {
+//5/ Fetch products from the server.
+fetch('/api/products')
+  .then(res => res.json())
+  .then(products => {
     render(products);
-  } else {
-    render(products
-      .filter(p => (p.name + p.description).toLowerCase().indexOf(value) > -1)
-    )
-  }
-});
 
-//8/ 1. Rendering of the list extracted to a function.
+    document.querySelector('.products__search').addEventListener('input', ev => {
+      const { value } = ev.target;
+      if (!value) {
+        render(products);
+      } else {
+        render(products
+          .filter(p => (p.name + p.description).toLowerCase().indexOf(value) > -1)
+        )
+      }
+    })
+  })
+
 function render (products) {
   const $products = document.querySelector('.products');
   $products.innerHTML = '';

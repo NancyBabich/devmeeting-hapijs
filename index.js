@@ -1,18 +1,21 @@
 'use strict'
 
 const Hapi = require('hapi')
+const products = require('./products.json')
 
 const server = new Hapi.Server()
 server.connection({
   port: process.env.PORT || 3000
 })
 
-// Instead of manualy handling static files, we will register `inert` plugin.
 server.register(require('inert'), err => {
   rethrow(err)
 
-  //8/ And just create a single route resolving files from `public` directory.
   server.route([{
+    method: 'GET',
+    path: '/api/products',
+    handler: (_request, reply) => reply(products),
+  }, {
     method: 'GET',
     path: '/{param*}',
     handler: {
