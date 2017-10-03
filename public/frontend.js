@@ -6,10 +6,29 @@ const products = [
   { id: 9, name: 'TV', price: 70000, description: 'Huge, bright display and amazing sound.' },
 ];
 
-//4/ Rendering is now extracted to a separate function.
-const $products = document.querySelector('.products');
-for (const product of products) {
-  $products.appendChild(renderProduct(product));
+// Initial render
+render(products);
+
+//10/ Filter and re-render whenever search box content changes.
+document.querySelector('.products__search').addEventListener('input', ev => {
+  const { value } = ev.target;
+  if (!value) {
+    render(products);
+  } else {
+    render(products
+      .filter(p => (p.name + p.description).toLowerCase().indexOf(value) > -1)
+    )
+  }
+});
+
+//8/ 1. Rendering of the list extracted to a function.
+function render (products) {
+  const $products = document.querySelector('.products');
+  $products.innerHTML = '';
+
+  for (const product of products) {
+    $products.appendChild(renderProduct(product));
+  }
 }
 
 function renderProduct ({name, id, price, description}) {
@@ -25,25 +44,20 @@ function renderProduct ({name, id, price, description}) {
   const $price = el('p.product__price');
   $price.innerHTML = `Price: <strong>$${(price / 100).toFixed(2)}</strong>`;
 
-
-  //4/ Build-up description structure.
   const $description = el('p.product__description');
   const $descriptionText = el('span');
   const $descriptionExpand = el('a');
   [$descriptionText, $descriptionExpand].forEach(el => $description.appendChild(el));
 
-  //4/ Rendering description depending on state.
   const renderDescription = full => {
     $descriptionText.textContent = full ? `${description} ` : `${description.substr(0, 10)}... `;
     $descriptionExpand.textContent = full ? 'Less' : 'Read more';
   };
-  //5/ Toggle description when clicking the button.
   let expanded = false;
   $descriptionExpand.addEventListener('click', () => {
     expanded = !expanded;
     renderDescription(expanded);
   });
-  // Don't forget the initial render.
   renderDescription(expanded);
 
   const $button = el('button.product__button');
