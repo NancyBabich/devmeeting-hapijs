@@ -1,7 +1,7 @@
 'use strict'
 
 const Hapi = require('hapi')
-const products = require('./products.json')
+const products = require('./models/products')
 
 const server = new Hapi.Server()
 server.connection({
@@ -14,7 +14,7 @@ server.register(require('inert'), err => {
   server.route([{
     method: 'GET',
     path: '/api/products',
-    handler: (_request, reply) => reply(products),
+    handler: (_request, reply) => reply(products.list),
   }, {
     method: 'GET',
     path: '/{param*}',
