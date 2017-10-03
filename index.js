@@ -47,14 +47,25 @@ server.register([
     path: '/api/products',
     handler: (_request, reply) => reply(products.list),
   },
-  //3/ Creating products
+  //11/ Removing product.
+  {
+    method: 'DELETE',
+    path: '/api/products/{id}',
+    handler (request, reply) {
+      const { id } = request.params;
+      if (products.remove(parseInt(id, 10))) {
+        reply().code(204)
+      } else {
+        reply(boom.notFound('Cannot find product'))
+      }
+    }
+  },
   {
     method: 'POST',
     path: '/api/products',
     handler (request, reply) {
       const {id, name, description, price } = request.payload;
       const priceV = parseInt(price, 10)
-      //3/ Validate each required parameter
       if (!id) {
         reply(boom.badRequest('missing id'))
         return
@@ -72,7 +83,6 @@ server.register([
         return
       }
 
-      //3/ After entire validation add product and return a response.
       const product = { id, name, description, price: priceV }
       products.add(product)
       reply(product).code(201)

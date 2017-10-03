@@ -1,25 +1,23 @@
-// Initial list of products is loaded from JSON.
 const products = require('./products.json');
 
-//4/ Create a class to manage products.
 class Products {
   constructor (data = products) {
     this._data = data
   }
 
-  //3/ Returns a list of products.
   get list () {
     return this._data
   }
 
-  //3/ Adds new product.
   add (product) {
     this._data.push(product)
   }
 
-  //3/ Removes a product by id.
+  //4/ Removing product should return true if anything was actually removed.
   remove (id) {
+    const len = this._data.length;
     this._data = this._data.filter(p => p.id !== id)
+    return this._data.length !== len;
   }
 }
 
