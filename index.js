@@ -10,12 +10,30 @@ server.connection({
 
 server.register([
   require('inert'),
-  // Add template support
-  require('vision')
+  require('vision'),
+  //2/ add logging with some configuration
+  {
+    register: require('good'),
+    options: {
+      //3/ Report host machine ops
+      ops: {
+        interval: 5000
+      },
+      //9/ Report logs and responses on the console.
+      reporters: {
+        consoleReporter: [{
+          module: 'good-squeeze',
+          name: 'Squeeze',
+          args: [{ log: '*', response: '*' }]
+        }, {
+          module: 'good-console'
+        }, 'stdout']
+      }
+    }
+  }
 ], err => {
   rethrow(err)
 
-  //8/ Template configuration.
   server.views({
     engines: {
       'html': {
@@ -31,7 +49,6 @@ server.register([
     path: '/api/products',
     handler: (_request, reply) => reply(products.list),
   },
-  //12/ Index file is now rendered from a template.
   {
     method: 'GET',
     path: '/',
