@@ -1,22 +1,29 @@
 'use strict';
 
-//5/ Fetch products from the server.
-fetch('/api/products')
-  .then(res => res.json())
-  .then(products => {
-    render(products);
-
-    document.querySelector('.products__search').addEventListener('input', ev => {
-      const { value } = ev.target;
-      if (!value) {
-        render(products);
-      } else {
-        render(products
-          .filter(p => (p.name + p.description).toLowerCase().indexOf(value) > -1)
-        )
-      }
+//12/ Use pre-populated content if present.
+let products = [];
+if (window.products) {
+  products = window.products;
+  render(products);
+} else {
+  fetch('/api/products')
+    .then(res => res.json())
+    .then(p => {
+      products = p;
+      render(p);
     })
-  })
+}
+
+document.querySelector('.products__search').addEventListener('input', ev => {
+  const { value } = ev.target;
+  if (!value) {
+    render(products);
+  } else {
+    render(products
+      .filter(p => (p.name + p.description).toLowerCase().indexOf(value) > -1)
+    )
+  }
+})
 
 function render (products) {
   const $products = document.querySelector('.products');
