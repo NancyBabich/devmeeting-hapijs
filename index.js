@@ -1,6 +1,7 @@
 'use strict'
 
 const Hapi = require('hapi')
+const boom = require('boom')
 const products = require('./models/products')
 
 const server = new Hapi.Server()
@@ -11,15 +12,12 @@ server.connection({
 server.register([
   require('inert'),
   require('vision'),
-  //2/ add logging with some configuration
   {
     register: require('good'),
     options: {
-      //3/ Report host machine ops
       ops: {
         interval: 5000
       },
-      //9/ Report logs and responses on the console.
       reporters: {
         consoleReporter: [{
           module: 'good-squeeze',
@@ -49,16 +47,44 @@ server.register([
     path: '/api/products',
     handler: (_request, reply) => reply(products.list),
   },
+  //3/ Creating products
+  {
+    method: 'POST',
+    path: '/api/products',
+    handler (request, reply) {
+      const {id, name, description, price } = request.payload;
+      const priceV = parseInt(price, 10)
+      //3/ Validate each required parameter
+      if (!id) {
+        reply(boom.badRequest('missing id'))
+        return
+      }
+      if (!name) {
+        reply(boom.badRequest('missing name'))
+        return
+      }
+      if (!description) {
+        reply(boom.badRequest('missing description'))
+        return
+      }
+      if (isNaN(priceV)) {
+        reply(boom.badRequest('invalid price'))
+        return
+      }
+
+      //3/ After entire validation add product and return a response.
+      const product = { id, name, description, price: priceV }
+      products.add(product)
+      reply(product).code(201)
+    }
+  },
   {
     method: 'GET',
     path: '/',
-    handler: {
-      view: {
-        template: 'index',
-        context: {
-          products: JSON.stringify(products.list)
-        }
-      }
+    handler (_request, reply) {
+      reply.view('index', {
+        products: JSON.stringify(products.list)
+      })
     }
   },
   {
