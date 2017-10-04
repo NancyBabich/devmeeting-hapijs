@@ -1,9 +1,6 @@
-// Load lab
 const { expect, it } = exports.lab = require('lab').script();
-// ... and load the server (but don't start it!)
 const server = require('../server');
 
-//9/ Write test and return a promise.
 it('should serve index.html', () => {
   return server.inject({
     method: 'GET',
@@ -31,7 +28,7 @@ it('should add new product', () => {
     payload: {
       id: 5,
       name: 'Test',
-      description: 'x',
+      description: 'abcd',
       price: 200
     }
   }).then(response => {

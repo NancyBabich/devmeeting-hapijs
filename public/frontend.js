@@ -1,6 +1,5 @@
 'use strict';
 
-//12/ Use pre-populated content if present.
 let products = [];
 if (window.products) {
   products = window.products;
@@ -20,11 +19,9 @@ document.querySelector('.products__search').addEventListener('input', ev => {
   }
 })
 
-//2/ Handle form submission
 document.querySelector('.products__form').addEventListener('submit', ev => {
   ev.preventDefault();
 
-  //9/ Extract the values of all fields.
   const find = (id, map=x=>x) => {
     return map(ev.target.querySelector(`input[name=${id}]`).value);
   };
@@ -34,7 +31,6 @@ document.querySelector('.products__form').addEventListener('submit', ev => {
   const description = find('description');
   const price = find('price', parseFloat) * 100;
 
-  //7/ Send out the request.
   fetch('/api/products', {
     method: 'POST',
     headers: {
@@ -42,15 +38,16 @@ document.querySelector('.products__form').addEventListener('submit', ev => {
     },
     body: JSON.stringify({id, name, description, price})
   }).then(res => {
-    //6/ In case it's successful clear the form and refresh.
     if (res.status === 201) {
       [].forEach.call(ev.target.querySelectorAll('input'), i => {
         i.value = '';
       });
       refresh();
     } else {
-      window.alert('Unable to add the product.');
-      console.log(res);
+      res.json().then(res => {
+        window.alert(`Unable to add the product: ${res.message}`);
+      });
+      console.error(res);
     }
   })
 

@@ -1,7 +1,8 @@
 'use strict'
 
 const Hapi = require('hapi')
-const boom = require('boom')
+const Boom = require('boom')
+const Joi = require('joi')
 const products = require('./models/products')
 
 const server = new Hapi.Server()
@@ -52,39 +53,40 @@ server.register([
   {
     method: 'DELETE',
     path: '/api/products/{id}',
+    //7/ Validating params is also super easy.
+    config: {
+      validate: {
+        params: {
+          id: Joi.number().integer().min(0).required()
+        }
+      }
+    },
     handler (request, reply) {
       const { id } = request.params;
-      if (products.remove(parseInt(id, 10))) {
+      if (products.remove(id)) {
         reply().code(204)
       } else {
-        reply(boom.notFound('Cannot find product'))
+        reply(Boom.notFound('Cannot find product'))
       }
     }
   },
+  //13/ Thanks to validation we can get rid of tedious manual checks.
   {
     method: 'POST',
     path: '/api/products',
+    config: {
+      validate: {
+        payload: {
+          id: Joi.number().integer().min(0).required(),
+          name: Joi.string().alphanum().trim().min(3).required(),
+          description: Joi.string().alphanum().trim().min(3).required(),
+          price: Joi.number().integer().min(0).required()
+        }
+      }
+    },
+    //5/ Handler is now really nice and simple.
     handler (request, reply) {
-      const {id, name, description, price } = request.payload;
-      const priceV = parseInt(price, 10)
-      if (!id) {
-        reply(boom.badRequest('missing id'))
-        return
-      }
-      if (!name) {
-        reply(boom.badRequest('missing name'))
-        return
-      }
-      if (!description) {
-        reply(boom.badRequest('missing description'))
-        return
-      }
-      if (isNaN(priceV)) {
-        reply(boom.badRequest('invalid price'))
-        return
-      }
-
-      const product = { id, name, description, price: priceV }
+      const product = request.payload
       products.add(product)
       reply(product).code(201)
     }
@@ -109,5 +111,4 @@ server.register([
   }])
 })
 
-// Server is now exposed in this module.
 module.exports = server;
