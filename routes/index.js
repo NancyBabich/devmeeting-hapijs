@@ -10,6 +10,38 @@ exports.register = (server, options, next) => {
     path: 'templates'
   })
 
+  //11/ Register a fibonacci server method
+  server.method('fibonacci', (n, next) => {
+    if (n < 2) {
+      return next(null, n);
+    }
+
+    //5/ Call the method recursively.
+    server.methods.fibonacci(n - 1, (e1, a) => {
+      server.methods.fibonacci(n - 2, (e2, b) => {
+        next(e1 || e2, a + b)
+      })
+    })
+  }, {
+    //4/ Declare cache (in memory)
+    cache: {
+      expiresIn: 60000,
+      generateTimeout: 5000
+    }
+  })
+
+  //10/ Add fibonacci endpoint.
+  server.route({
+    method: 'GET',
+    path: '/fib/{n}',
+    handler(request, reply) {
+      const { n } = request.params;
+      server.methods.fibonacci(parseInt(n), (err, res) => {
+        reply(err || res)
+      })
+    }
+  })
+
   server.route({
     method: 'GET',
     path: '/',
@@ -19,7 +51,6 @@ exports.register = (server, options, next) => {
           products: JSON.stringify(products.list)
         })
       },
-      //3/ You can also add tags, descriptions and notes to the routes.
       tags: ['html'],
       description: 'Render index page.',
       notes: 'It is not an API!'

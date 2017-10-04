@@ -4,12 +4,13 @@ const products = require('./products')
 const schemas = require('./schemas')
 
 exports.register = (server, options, next) => {
-  //10/ The prefix is defined in plugin options, we don't need to duplicate it here.
   server.route({
     method: 'GET',
     path: '/',
     config: {
-      handler: (_request, reply) => reply(products.list),
+      handler: (_request, reply) => {
+        reply(products.list)
+      },
       response: {
         schema: schemas.products
       }
