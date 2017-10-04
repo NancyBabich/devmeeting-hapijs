@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Shop</title>
+    <link rel="stylesheet" href="https://xpla.org/cdn/normalize/7.0.0/normalize.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="frontend.js" defer></script>
+  </head>
+  <body>
+    <h1>Products</h1>
+    <input
+      class="products__search"
+      type="text"
+      placeholder="Search..."
+    >
+    <div class="products"></div>
+    <form class="products__form">
+      <h3>New product</h3>
+      <input type="number" name="id" placeholder="Id" required>
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="text" name="description" placeholder="Description" required>
+      <input type="number" name="price" placeholder="Price" required>
+
+      <button>
+        &oplus; Add Product
+      </button>
+    </form>
+    <!-- Auto-generates nonce for inline scripts. -->
+    <script nonce="{{ script-nonce }}">
+      window.products = {{{ products }}};
+    </script>
+  </body>
+</html>

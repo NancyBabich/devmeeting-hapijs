@@ -1,0 +1,43 @@
+
+    <!DOCTYPE html>
+    <html xp-run-server-url="https://xpla.org" xp-presence-url="wss://presence.xpla.org">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Move products to the backend.</title>
+        <script src="https://xpla.org/static/js/slide_loader.3.0.0.js"></script>
+      </head>
+      <body class="xp-slide">
+        <div class="xp-row with-comments">
+          
+    
+    <div class="xp-column">
+      <xp-editor active="index.js" >
+        	<script id="index.js" highlight="1-22" type="application/octetstream" src="008/index.js"></script>
+	<script id="products.json" highlight="1-5" type="application/octetstream" src="008/products.json"></script>
+	<script id="public/frontend.js" highlight="1-23" type="application/octetstream" src="008/public/frontend.js"></script>
+	<script id="package-lock.json" type="application/octetstream" src="007/package-lock.json"></script>
+	<script id="package.json" type="application/octetstream" src="007/package.json"></script>
+	<script id="public/index.html" type="application/octetstream" src="005/public/index.html"></script>
+	<script id="public/styles.css" type="application/octetstream" src="005/public/styles.css"></script>
+      </xp-editor>
+    </div>
+  
+    <div class="xp-resize-column"></div>
+    
+    <div class="xp-column">
+      <xp-preview server runner="express"></xp-preview>
+    </div>
+  
+  
+        </div>
+        <div class="xp-resize-row"></div>
+        <div class="xp-row comments">
+          <xp-annotations>
+            <header><h1>Move products to the backend.</h1></header>
+            
+          </xp-annotations>
+        </div>
+      </body>
+    </html>
+  

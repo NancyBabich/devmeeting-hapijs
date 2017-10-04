@@ -1,0 +1,44 @@
+
+    <!DOCTYPE html>
+    <html xp-run-server-url="https://xpla.org" xp-presence-url="wss://presence.xpla.org">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Rendering a template.</title>
+        <script src="https://xpla.org/static/js/slide_loader.3.0.0.js"></script>
+      </head>
+      <body class="xp-slide">
+        <div class="xp-row with-comments">
+          
+    
+    <div class="xp-column" style="width: 65%">
+      <xp-editor active="index.js" tree>
+        	<script id="index.js" highlight="8-50" type="application/octetstream" src="010/index.js"></script>
+	<script id="package-lock.json" highlight="13-33,37-47,64-75,101-135,146-168,252-262,287-311,329-339,343-357,397-416,433-446,487-517,520-568,576-593" type="application/octetstream" src="010/package-lock.json"></script>
+	<script id="package.json" highlight="10-18" type="application/octetstream" src="010/package.json"></script>
+	<script id="public/frontend.js" highlight="1-29" type="application/octetstream" src="010/public/frontend.js"></script>
+	<script id="templates/index.html" highlight="1-24" type="application/octetstream" src="010/templates/index.html"></script>
+	<script id="models/products.js" type="application/octetstream" src="009/models/products.js"></script>
+	<script id="models/products.json" type="application/octetstream" src="009/models/products.json"></script>
+	<script id="public/styles.css" type="application/octetstream" src="005/public/styles.css"></script>
+      </xp-editor>
+    </div>
+  
+    <div class="xp-resize-column"></div>
+    
+    <div class="xp-column" style="width: 35%">
+      <xp-preview server runner="express"></xp-preview>
+    </div>
+  
+  
+        </div>
+        <div class="xp-resize-row"></div>
+        <div class="xp-row comments">
+          <xp-annotations>
+            <header><h1>Rendering a template.</h1></header>
+            
+          </xp-annotations>
+        </div>
+      </body>
+    </html>
+  
