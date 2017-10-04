@@ -6,12 +6,7 @@ if (window.products) {
   products = window.products;
   render(products);
 } else {
-  fetch('/api/products')
-    .then(res => res.json())
-    .then(p => {
-      products = p;
-      render(p);
-    })
+  refresh();
 }
 
 document.querySelector('.products__search').addEventListener('input', ev => {
@@ -24,6 +19,51 @@ document.querySelector('.products__search').addEventListener('input', ev => {
     )
   }
 })
+
+//2/ Handle form submission
+document.querySelector('.products__form').addEventListener('submit', ev => {
+  ev.preventDefault();
+
+  //9/ Extract the values of all fields.
+  const find = (id, map=x=>x) => {
+    return map(ev.target.querySelector(`input[name=${id}]`).value);
+  };
+
+  const id = find('id', parseInt);
+  const name = find('name');
+  const description = find('description');
+  const price = find('price', parseFloat) * 100;
+
+  //7/ Send out the request.
+  fetch('/api/products', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({id, name, description, price})
+  }).then(res => {
+    //6/ In case it's successful clear the form and refresh.
+    if (res.status === 201) {
+      [].forEach.call(ev.target.querySelectorAll('input'), i => {
+        i.value = '';
+      });
+      refresh();
+    } else {
+      window.alert('Unable to add the product.');
+      console.log(res);
+    }
+  })
+
+})
+
+function refresh () {
+  fetch('/api/products')
+    .then(res => res.json())
+    .then(p => {
+      products = p;
+      render(p);
+    });
+}
 
 function render (products) {
   const $products = document.querySelector('.products');
