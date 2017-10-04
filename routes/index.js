@@ -10,27 +10,23 @@ exports.register = (server, options, next) => {
     path: 'templates'
   })
 
-  //11/ Register a fibonacci server method
   server.method('fibonacci', (n, next) => {
     if (n < 2) {
       return next(null, n);
     }
 
-    //5/ Call the method recursively.
     server.methods.fibonacci(n - 1, (e1, a) => {
       server.methods.fibonacci(n - 2, (e2, b) => {
         next(e1 || e2, a + b)
       })
     })
   }, {
-    //4/ Declare cache (in memory)
     cache: {
       expiresIn: 60000,
       generateTimeout: 5000
     }
   })
 
-  //10/ Add fibonacci endpoint.
   server.route({
     method: 'GET',
     path: '/fib/{n}',
