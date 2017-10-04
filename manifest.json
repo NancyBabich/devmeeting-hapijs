@@ -12,6 +12,9 @@
       "plugin": "vision"
     },
     {
+      "plugin": "lout"
+    },
+    {
       "plugin": {
         "register": "good",
         "options": {

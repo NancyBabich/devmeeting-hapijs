@@ -13,10 +13,16 @@ exports.register = (server, options, next) => {
   server.route({
     method: 'GET',
     path: '/',
-    handler (_request, reply) {
-      reply.view('index', {
-        products: JSON.stringify(products.list)
-      })
+    config: {
+      handler (_request, reply) {
+        reply.view('index', {
+          products: JSON.stringify(products.list)
+        })
+      },
+      //3/ You can also add tags, descriptions and notes to the routes.
+      tags: ['html'],
+      description: 'Render index page.',
+      notes: 'It is not an API!'
     }
   })
 

@@ -1,11 +1,16 @@
-//13/ Each plugin exports a `register` function.
 exports.register = (server, options, next) => {
   server.route({
     method: 'GET',
     path: '/{param*}',
-    handler: {
-      directory: {
-        path: 'public'
+    config: {
+      handler: {
+        directory: {
+          path: 'public'
+        }
+      },
+      //3/ We can ignore a route from documentation.
+      plugins: {
+        lout: false
       }
     }
   })
@@ -13,7 +18,6 @@ exports.register = (server, options, next) => {
   next()
 }
 
-//6/ And some additional metadata.
 exports.register.attributes = {
   pkg: {
     name: 'static',

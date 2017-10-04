@@ -19,6 +19,7 @@
     "hapi": "16.6.2",
     "inert": "4.2.1",
     "joi": "11.1.1",
+    "lout": "10.0.3",
     "vision": "4.1.1"
   },
   "devDependencies": {
