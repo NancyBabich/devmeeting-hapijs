@@ -2,8 +2,9 @@
 
 const Hapi = require('hapi')
 const Boom = require('boom')
-const Joi = require('joi')
+
 const products = require('./models/products')
+const schemas = require('./schemas')
 
 const server = new Hapi.Server()
 server.connection({
@@ -48,43 +49,51 @@ server.register([
   {
     method: 'GET',
     path: '/api/products',
-    handler: (_request, reply) => reply(products.list),
+    config: {
+      handler: (_request, reply) => reply(products.list),
+      //4/ Validating response is really easy.
+      // By default hapi will return 500 if schema doesn't match.
+      response: {
+        schema: schemas.products
+      }
+    }
   },
   {
     method: 'DELETE',
     path: '/api/products/{id}',
-    //7/ Validating params is also super easy.
     config: {
       validate: {
         params: {
-          id: Joi.number().integer().min(0).required()
+          id: schemas.id
         }
       }
     },
-    handler (request, reply) {
-      const { id } = request.params;
-      if (products.remove(id)) {
-        reply().code(204)
-      } else {
-        reply(Boom.notFound('Cannot find product'))
+    config: {
+      handler (request, reply) {
+        const { id } = request.params;
+        if (products.remove(parseInt(id))) {
+          reply().code(204)
+        } else {
+          reply(Boom.notFound('Cannot find product'))
+        }
+      },
+      //6/ Validating response depending on the status code.
+      response: {
+        status: {
+          204: schemas.any,
+          404: schemas.error,
+        }
       }
     }
   },
-  //13/ Thanks to validation we can get rid of tedious manual checks.
   {
     method: 'POST',
     path: '/api/products',
     config: {
       validate: {
-        payload: {
-          id: Joi.number().integer().min(0).required(),
-          name: Joi.string().alphanum().trim().min(3).required(),
-          description: Joi.string().alphanum().trim().min(3).required(),
-          price: Joi.number().integer().min(0).required()
-        }
+        payload: schemas.product
       }
     },
-    //5/ Handler is now really nice and simple.
     handler (request, reply) {
       const product = request.payload
       products.add(product)
