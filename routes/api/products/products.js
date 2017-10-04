@@ -13,7 +13,6 @@ class Products {
     this._data.push(product)
   }
 
-  //4/ Removing product should return true if anything was actually removed.
   remove (id) {
     const len = this._data.length;
     this._data = this._data.filter(p => p.id !== id)

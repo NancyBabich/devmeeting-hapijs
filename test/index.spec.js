@@ -1,5 +1,10 @@
-const { expect, it } = exports.lab = require('lab').script();
-const server = require('../server');
+const { expect, it, before } = exports.lab = require('lab').script();
+
+//4/ Let's wait for server before tests.
+let server = null;
+before(() => require('../index').then(s => {
+  server = s;
+}))
 
 it('should serve index.html', () => {
   return server.inject({

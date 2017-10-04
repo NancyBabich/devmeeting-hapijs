@@ -1,4 +1,3 @@
-//4/ All the schemas are placed in a single file to allow easy re-use.
 const Joi = require('joi')
 
 exports.id = Joi.number().integer().positive().required()
