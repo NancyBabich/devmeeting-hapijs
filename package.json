@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "lab"
   },
   "author": "",
   "license": "MIT",
@@ -18,5 +18,8 @@
     "hapi": "16.6.2",
     "inert": "4.2.1",
     "vision": "4.1.1"
+  },
+  "devDependencies": {
+    "lab": "14.3.1"
   }
 }
