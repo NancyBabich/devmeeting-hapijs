@@ -27,8 +27,8 @@
         &oplus; Add Product
       </button>
     </form>
-    <script>
-      // Inline products for faster rendering.
+    <!-- Auto-generates nonce for inline scripts. -->
+    <script nonce="{{ script-nonce }}">
       window.products = {{{ products }}};
     </script>
   </body>
