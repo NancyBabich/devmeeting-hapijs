@@ -1,7 +1,7 @@
 'use strict';
 
 //5/ Fetch products from the server.
-fetch('/api/products')
+fetch('api/products')
   .then(res => res.json())
   .then(products => {
     render(products);

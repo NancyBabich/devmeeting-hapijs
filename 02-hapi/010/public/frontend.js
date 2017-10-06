@@ -6,7 +6,7 @@ if (window.products) {
   products = window.products;
   render(products);
 } else {
-  fetch('/api/products')
+  fetch('api/products')
     .then(res => res.json())
     .then(p => {
       products = p;

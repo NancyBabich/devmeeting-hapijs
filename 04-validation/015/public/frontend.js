@@ -35,7 +35,7 @@ document.querySelector('.products__form').addEventListener('submit', ev => {
   const price = find('price', parseFloat) * 100;
 
   //7/ Send out the request.
-  fetch('/api/products', {
+  fetch('api/products', {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -57,7 +57,7 @@ document.querySelector('.products__form').addEventListener('submit', ev => {
 })
 
 function refresh () {
-  fetch('/api/products')
+  fetch('api/products')
     .then(res => res.json())
     .then(p => {
       products = p;
