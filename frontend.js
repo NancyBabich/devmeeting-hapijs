@@ -7,12 +7,7 @@ if (window.products) {
   products = window.products
   render(products)
 } else {
-  get('/api/products')
-    .then(p => {
-      products = p
-      render(p, cart)
-    })
-    .catch(err => console.error('Unable to fetch products.', err))
+  fetchProducts()
 }
 
 // fetch cart
@@ -34,6 +29,34 @@ $('.products__search').addEventListener('input', ev => {
   }
 })
 
+$('.products__form').addEventListener('submit', ev => {
+  ev.preventDefault()
+  const { target } = ev
+
+  const find = (id, map = x => x) => map(target.querySelector(`input[name=${id}]`).value)
+
+  const id = find('id', parseInt)
+  const name = find('name')
+  const description = find('description')
+  const price = find('price', parseFloat) * 100
+  const token = find('token')
+
+  post('/api/products', {id, name, description, price}, {
+    'Authorization': `Bearer ${token}`
+  })
+    .then(res => {
+      if (res.status === 201) {
+        [].forEach.call(target.querySelectorAll('input'), i => {
+          i.value = ''
+        })
+        fetchProducts()
+      } else {
+        console.error(res)
+        window.alert('Unable to add the product.')
+      }
+    })
+})
+
 function get (url) {
   return window.fetch(url)
     .then(res => res.json())
@@ -45,14 +68,24 @@ function delet (url) {
   })
 }
 
-function post (url, data) {
+function post (url, data, headers = {}) {
   return window.fetch(url, {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
+      ...headers
     },
     body: JSON.stringify(data, null, 2)
   })
+}
+
+function fetchProducts () {
+  get('/api/products')
+    .then(p => {
+      products = p
+      render(p, cart)
+    })
+    .catch(err => console.error('Unable to fetch products.', err))
 }
 
 function render (products, cart) {
